@@ -21,6 +21,8 @@ class ResponseForm(models.ModelForm):
         Question.TEXT: forms.Textarea,
         Question.SHORT_TEXT: forms.TextInput,
         Question.RADIO: forms.RadioSelect,
+        Question.LIKERT: forms.RadioSelect,
+        Question.LIKERT4: forms.RadioSelect,
         Question.SELECT: forms.Select,
         Question.SELECT_IMAGE: ImageSelectWidget,
         Question.SELECT_MULTIPLE: forms.CheckboxSelectMultiple,
@@ -129,12 +131,16 @@ class ResponseForm(models.ModelForm):
         :param Question question: The question
         :rtype: List of String or None """
         qchoices = None
-        if question.type not in [Question.TEXT, Question.SHORT_TEXT, Question.INTEGER]:
+        if question.type not in [Question.TEXT, Question.SHORT_TEXT, Question.INTEGER, Question.LIKERT, Question.LIKERT4]:
             qchoices = question.get_choices()
             # add an empty option at the top so that the user has to explicitly
             # select one of the options
             if question.type in [Question.SELECT, Question.SELECT_IMAGE]:
                 qchoices = tuple([("", "-------------")]) + qchoices
+        if question.type in [Question.LIKERT]:
+            qchoices = question.get_likert_choices
+        if question.type in [Question.LIKERT4]:
+            qchoices = question.get_likert4_choices
         return qchoices
 
     def get_question_field(self, question, **kwargs):

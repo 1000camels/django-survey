@@ -56,6 +56,8 @@ class Question(models.Model):
     SELECT_IMAGE = "select_image"
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
+    LIKERT = "likert"
+    LIKERT4 = "likert4"
 
     QUESTION_TYPES = (
         (TEXT, _("text (multiple line)")),
@@ -65,6 +67,8 @@ class Question(models.Model):
         (SELECT_MULTIPLE, _("Select Multiple")),
         (SELECT_IMAGE, _("Select Image")),
         (INTEGER, _("integer")),
+        (LIKERT, _("Likert")),
+        (LIKERT4, _("Likert (4)")),
     )
 
     text = models.TextField(_("Text"))
@@ -397,6 +401,31 @@ class Question(models.Model):
             choices_list.append((slugify(choice, allow_unicode=True), choice))
         choices_tuple = tuple(choices_list)
         return choices_tuple
+
+
+    def get_likert_choices(self):
+        """
+        Return the Likert choices
+        """
+        choices_list = []
+        choices = ["Not At All","To Some Degree","To A Moderate Degree","To A Considerable Degree","In a fully implementable way"]
+        for choice in choices:
+            choices_list.append((slugify(choice, allow_unicode=True), choice))
+        choices_tuple = tuple(choices_list)
+        return choices_tuple
+
+
+    def get_likert4_choices(self):
+        """
+        Return the Likert choices
+        """
+        choices_list = []
+        choices = ["Not Really","Some Extent","Moderate Extent","Fully Implementable"]
+        for choice in choices:
+            choices_list.append((slugify(choice, allow_unicode=True), choice))
+        choices_tuple = tuple(choices_list)
+        return choices_tuple
+
 
     def __str__(self):
         msg = "Question '{}' ".format(self.text)
